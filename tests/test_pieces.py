@@ -1,6 +1,6 @@
 from chessington.engine.board import Board
 from chessington.engine.data import Player, Square
-from chessington.engine.pieces import Pawn
+from chessington.engine.pieces import Pawn, King
 
 class TestPawns:
 
@@ -213,3 +213,89 @@ class TestPawns:
 
         # Assert
         assert Square.at(4, 4) not in moves
+
+class TestKing:
+    
+    @staticmethod
+    def test_white_king_can_move():
+        # Arrange
+        board = Board.empty()
+        king = King(Player.WHITE)
+        square = Square.at(1, 4)
+        board.set_piece(square, king)
+
+        # Act
+        moves = king.get_available_moves(board)
+
+        # Assert
+        assert Square.at(0,3) in moves
+        assert Square.at(0,4) in moves
+        assert Square.at(0,5) in moves
+        assert Square.at(1,3) in moves
+        assert Square.at(1,5) in moves
+        assert Square.at(2,3) in moves
+        assert Square.at(2,4) in moves
+        assert Square.at(2,5) in moves
+        assert Square.at(1,6) not in moves
+
+        
+    @staticmethod
+    def test_white_king_on_row_edge_can_move():
+        # Arrange
+        board = Board.empty()
+        king = King(Player.WHITE)
+        square = Square.at(0, 4)
+        board.set_piece(square, king)
+
+        # Act
+        moves = king.get_available_moves(board)
+
+        # Assert
+        assert Square.at(0,3) in moves
+        assert Square.at(0,4) not in moves
+        assert Square.at(0,5) in moves
+        assert Square.at(1,3) in moves
+        assert Square.at(1,4) in moves
+        assert Square.at(1,5) in moves
+        assert Square.at(-1,4) not in moves
+
+    @staticmethod
+    def test_white_king_on_col_edge_can_move():
+        # Arrange
+        board = Board.empty()
+        king = King(Player.WHITE)
+        square = Square.at(6, 0)
+        board.set_piece(square, king)
+
+        # Act
+        moves = king.get_available_moves(board)
+
+        # Assert
+        assert Square.at(5,0) in moves
+        assert Square.at(6,0) not in moves
+        assert Square.at(7,0) in moves
+        assert Square.at(5,1) in moves
+        assert Square.at(6,1) in moves
+        assert Square.at(7,1) in moves
+        assert Square.at(8,0) not in moves
+        assert Square.at(8,-1) not in moves
+    
+    @staticmethod
+    def test_white_king_on_corner_can_move():
+        # Arrange
+        board = Board.empty()
+        king = King(Player.WHITE)
+        square = Square.at(0, 0)
+        board.set_piece(square, king)
+
+        # Act
+        moves = king.get_available_moves(board)
+
+        # Assert
+        assert Square.at(0,1) in moves
+        assert Square.at(0,0) not in moves
+        assert Square.at(1,1) in moves
+        assert Square.at(1,0) in moves
+        assert Square.at(0,-1) not in moves
+        assert Square.at(-1,-1) not in moves
+        assert Square.at(-1,0) not in moves

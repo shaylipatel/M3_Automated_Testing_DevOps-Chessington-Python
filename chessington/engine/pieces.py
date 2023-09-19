@@ -45,10 +45,16 @@ class Pawn(Piece):
         for move in available_moves: 
             if self.player == Player.BLACK:
                 square_in_front = Square.at(current_square.row - move, current_square.col)
-                available_squares.append(square_in_front)
+                if not board.get_piece(square_in_front):
+                    available_squares.append(square_in_front)
+                else:
+                    break
             else:
                 square_in_front = Square.at(current_square.row + move, current_square.col)
-                available_squares.append(square_in_front)
+                if not board.get_piece(square_in_front):
+                    available_squares.append(square_in_front)
+                else:
+                    break
         return available_squares
 
 class Knight(Piece):
@@ -92,5 +98,28 @@ class King(Piece):
     A class representing a chess king.
     """
 
-    def get_available_moves(self, board):
-        return []
+    def get_available_moves(self, board) -> List[Square]:
+        current_square = board.find_piece(self)
+        
+        current_col = current_square.col
+        current_row = current_square.row
+
+        available_cols = range(current_col-1, current_col+2)
+        available_rows = range(current_row-1, current_row+2)
+
+        available_squares = []
+
+        for r in available_rows:
+            if r < 0 or r > 7:
+                continue
+            for c in available_cols:
+                if c < 0 or c > 7:
+                    continue
+                
+                if r == current_row and c == current_col:
+                    continue
+                if not board.get_piece(Square.at(r, c)):
+                    available_squares.append(Square.at(r, c))
+                else:
+                    pass
+        return available_squares
