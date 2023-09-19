@@ -13,6 +13,7 @@ class Piece(ABC):
 
     def __init__(self, player: Player):
         self.player = player
+        self.first_move = True
 
     @abstractmethod
     def get_available_moves(self, board: Board) -> List[Square]:
@@ -27,6 +28,7 @@ class Piece(ABC):
         """
         current_square = board.find_piece(self)
         board.move_piece(current_square, new_square)
+        self.first_move = False
 
 
 class Pawn(Piece):
@@ -35,13 +37,19 @@ class Pawn(Piece):
     """
     def get_available_moves(self, board) -> List[Square]:
         current_square = board.find_piece(self)
-        if self.player == Player.BLACK:
-            square_in_front = Square.at(current_square.row - 1, current_square.col)
-            return [square_in_front]
-        else:
-            square_in_front = Square.at(current_square.row + 1, current_square.col)
-            return [square_in_front]
-
+        if self.first_move:
+            available_moves = [1,2]        
+        else: 
+            available_moves = [1]
+        available_squares = []
+        for move in available_moves: 
+            if self.player == Player.BLACK:
+                square_in_front = Square.at(current_square.row - move, current_square.col)
+                available_squares.append(square_in_front)
+            else:
+                square_in_front = Square.at(current_square.row + move, current_square.col)
+                available_squares.append(square_in_front)
+        return available_squares
 
 class Knight(Piece):
     """
